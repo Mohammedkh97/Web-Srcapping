@@ -20,3 +20,42 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+### Python / Web Scraper ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Pytest
+.cache/
+
+# IDE/editor metadata
+.idea/
+.vscode/
+*.swp
+
+# Local data and secrets
+data/
+exports/
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
