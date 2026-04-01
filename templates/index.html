@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Scraper | Scrape.do Integration</title>
+    <meta
+      name="description"
+      content="Web scraping application with Scrape.do integration for legal consultancy websites"
+    />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <div class="logo">
+            <svg
+              class="logo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 2a10 10 0 0 1 0 20" />
+              <path d="M12 12L12 6" />
+              <path d="M12 12L16 14" />
+            </svg>
+            <span class="logo-text">Web Scraper</span>
+          </div>
+          <nav class="nav">
+            <button class="nav-btn active" data-tab="scraper">Scraper</button>
+            <button class="nav-btn" data-tab="history">History</button>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Scraper Tab -->
+        <section id="scraper-tab" class="tab-content active">
+          <div class="scraper-card glass-card">
+            <h2 class="card-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"
+                />
+              </svg>
+              Scrape Website
+            </h2>
+
+            <form id="scrape-form" class="scrape-form">
+              <div class="form-group">
+                <label for="url-input">Target URL</label>
+                <div class="input-wrapper">
+                  <input
+                    type="url"
+                    id="url-input"
+                    name="url"
+                    placeholder="https://example.com/articles"
+                    required
+                  />
+                  <button type="submit" class="btn btn-primary" id="scrape-btn">
+                    <span class="btn-text">Scrape</span>
+                    <span class="btn-loader"></span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-options">
+                <label class="checkbox-wrapper">
+                  <input type="checkbox" name="extract_articles" checked />
+                  <span class="checkmark"></span>
+                  Extract Articles
+                </label>
+                <label class="checkbox-wrapper">
+                  <input type="checkbox" name="extract_links" />
+                  <span class="checkmark"></span>
+                  Extract Links
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <!-- Results Section -->
+          <div id="results-section" class="results-section hidden">
+            <div class="results-header">
+              <h3 class="results-title">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 12l2 2 4-4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <span id="results-count">0</span> Articles Found
+              </h3>
+              <div class="export-buttons">
+                <button class="btn btn-secondary" id="export-json-btn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                  JSON
+                </button>
+                <button class="btn btn-secondary" id="export-csv-btn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                  </svg>
+                  CSV
+                </button>
+              </div>
+            </div>
+
+            <div id="articles-grid" class="articles-grid">
+              <!-- Articles will be inserted here -->
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div id="error-message" class="error-message hidden">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+            <span id="error-text"></span>
+          </div>
+        </section>
+
+        <!-- History Tab -->
+        <section id="history-tab" class="tab-content">
+          <div class="history-header">
+            <h2 class="section-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Scraping History
+            </h2>
+            <div class="history-actions">
+              <button class="btn btn-secondary" id="refresh-history-btn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M23 4v6h-6" />
+                  <path d="M1 20v-6h6" />
+                  <path
+                    d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+                  />
+                </svg>
+                Refresh
+              </button>
+              <button class="btn btn-secondary" id="export-all-json">
+                Export All (JSON)
+              </button>
+              <button class="btn btn-secondary" id="export-all-csv">
+                Export All (CSV)
+              </button>
+            </div>
+          </div>
+
+          <div id="history-table-container" class="table-container">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>URL</th>
+                  <th>Status</th>
+                  <th>Articles</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <!-- History rows will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+
+          <div id="history-empty" class="empty-state hidden">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <p>No scraping history yet</p>
+            <span>Start by scraping a website</span>
+          </div>
+        </section>
+      </main>
+
+      <!-- Toast Notification -->
+      <div id="toast" class="toast hidden">
+        <span id="toast-message"></span>
+      </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
