@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  web-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-scraper
+    ports:
+      - "8000:8000"
+    environment:
+      - SCRAPEDO_TOKEN=${SCRAPEDO_TOKEN:-2a96e7c667c94c6c8f237f72f30311e8fd2d05f9f19}
+      - DATABASE_URL=sqlite:///./data/scraper.db
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./exports:/app/exports
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  web-scraper-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-scraper-dev
+    ports:
+      - "8001:8000"
+    environment:
+      - SCRAPEDO_TOKEN=${SCRAPEDO_TOKEN:-2a96e7c667c94c6c8f237f72f30311e8fd2d05f9f19}
+      - DATABASE_URL=sqlite:///./data/scraper.db
+      - PYTHONPATH=/app
+    volumes:
+      - ./app:/app/app
+      - ./static:/app/static
+      - ./templates:/app/templates
+      - ./data:/app/data
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles:
+      - dev
